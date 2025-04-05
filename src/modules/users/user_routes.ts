@@ -87,7 +87,7 @@ router.post('/users', createUserHandler);
  *                  email:
  *                     type: string
  */
-router.get('/users', getAllUsersHandler);
+router.get('/users', checkJwt, getAllUsersHandler);
 
 /**
  * @openapi

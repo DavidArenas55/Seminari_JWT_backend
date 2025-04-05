@@ -99,7 +99,7 @@ router.post('/subjects', createSubjectHandler);
  *               items:
  *                 $ref: '#/components/schemas/Subject'
  */
-router.get('/subjects', getAllSubjectsHandler);
+router.get('/subjects', checkJwt, getAllSubjectsHandler);
 
 /**
  * @swagger
