@@ -1,5 +1,5 @@
 import { encrypt, verified } from "../../utils/bcrypt.handle.js";
-import { generateToken } from "../../utils/jwt.handle.js";
+import { generateTokens } from "../../utils/jwt.handle.js";
 import User, { IUser } from "../users/user_models.js";
 import { Auth } from "./auth_model.js";
 import jwt from 'jsonwebtoken';
@@ -25,16 +25,19 @@ const loginUser = async ({ email, password }: Auth) => {
     const isCorrect = await verified(password, passwordHash);
     if(!isCorrect) return "INCORRECT_PASSWORD";
 
-    const token = generateToken({
-        id: checkIs._id.toString(),  // asegúrate de convertir a string si es ObjectId
+    // Genera el token JWT
+    const { jwt, refreshToken } = generateTokens({
+        id: checkIs._id.toString(),
         email: checkIs.email,
         name: checkIs.name,
         googleId: checkIs.googleId ?? undefined,
     });
+
     const data = {
-        token,
-        user: checkIs
-    }
+        jwt,
+        refreshToken,
+        user: checkIs,
+    };
     return data;
 };
 
@@ -93,7 +96,7 @@ const googleAuth = async (code: string) => {
         }
 
         // Genera el token JWT
-        const token = generateToken({
+        const token = generateTokens({
             id: user._id.toString(),  // asegúrate de convertir a string si es ObjectId
             email: user.email,
             name: user.name,

@@ -11,6 +11,7 @@ import { routeNotFound } from './middleware/routeNotFound.js';
 import { checkJwt } from './middleware/session.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
+import cookieParser from 'cookie-parser';
 
 dotenv.config(); // Cargamos las variables de entorno desde el archivo .env
 
@@ -79,6 +80,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(express.json());
 app.use(loggingHandler);
 app.use(corsHandler);
+app.use(cookieParser());
 //rutas
 app.use('/api', userRoutes);
 app.use('/api', forumRoutes);

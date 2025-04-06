@@ -1,6 +1,6 @@
 // src/routes/user_routes.ts
 import express from 'express';
-import { registerCtrl, loginCtrl, googleAuthCtrl, googleAuthCallback } from "../auth/auth_controller.js";
+import { registerCtrl, loginCtrl, googleAuthCtrl, googleAuthCallback, refreshTokenCtrl } from "../auth/auth_controller.js";
 
 const router = express.Router();
 
@@ -114,5 +114,27 @@ router.get('/auth/google',googleAuthCtrl );
  *         description: Error en la autenticación
  */
 router.get('/auth/google/callback', googleAuthCallback);
+
+/**
+ * @swagger
+ * /api/auth/refresh:
+ *   post:
+ *     summary: Genera un nuevo JWT a partir del refresh token
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/RefreshTokenRequest'
+ *     responses:
+ *       200:
+ *         description: Nuevo token generado exitosamente
+ *       401:
+ *         description: Token de actualización requerido
+ *       403:
+ *         description: Token inválido o expirado
+ */
+router.post("/refresh", refreshTokenCtrl);
 
 export default router;

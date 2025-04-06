@@ -10,28 +10,20 @@ export interface JwtPayloadExt {
     googleId?: string;
 }
 
-// Extiende el Request para incluir la propiedad 'user'
-interface RequestExt extends Request {
-    user?: JwtPayloadExt;  // Asegúrate de que 'user' sea del tipo JwtPayloadExt
-}
-
 // Middleware de autenticación
-const checkJwt = (req: RequestExt, res: Response, next: NextFunction) => {
+const checkJwt = (req: Request, res: Response, next: NextFunction) => {
     try {
-        // Obtén el token del header de la solicitud
         const jwtByUser = req.headers.authorization || null;
         const jwt = jwtByUser?.split(' ').pop(); // Extrae el JWT del header
         console.log(jwt);
 
-        // Verifica si el token es válido
         const isUser = verifyToken(`${jwt}`);
         
         if (!isUser) {
             return res.status(401).send("NO_TIENES_UN_JWT_VALIDO");
         }
 
-        // Asigna la información del token al objeto 'req.user'
-        req.user = isUser; // 'isUser' debería ser el payload del token
+        req.user = isUser; // Asignamos `user` a `req` directamente
         next(); // Si el token es válido, pasa al siguiente middleware
     } catch (e) {
         console.error("Error en checkJwt:", e);
@@ -39,4 +31,5 @@ const checkJwt = (req: RequestExt, res: Response, next: NextFunction) => {
     }
 };
 
-export { checkJwt };
+
+export { checkJwt};
